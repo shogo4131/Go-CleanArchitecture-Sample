@@ -1,0 +1,53 @@
+version: "3"
+
+volumes:
+  db-store:
+    driver: local
+
+services:
+  # データベース
+  db:
+    image: mysql:8.0.35-debian
+    volumes:
+      - type: volume
+        source: db-store
+        target: /var/lib/mysql
+        volume:
+          nocopy: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: shop_app
+      TZ: Asia/Tokyo
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      LANG: C.UTF-8
+    command: --collation-server=utf8mb4_general_ci
+    platform: linux/x86_64
+
+  # redis
+  redis:
+    image: redis:6.0-alpine3.18
+    ports:
+      - 6379:6379
+
+  # APIサーバー
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    tty: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=shop_app
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379

@@ -1,0 +1,10 @@
+# go
+go.work
+go.work.sum
+
+# macOS
+.DS_Store
+
+# etc
+.idea
+*tmp*
