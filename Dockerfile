@@ -1,5 +1,5 @@
 # ビルドステージ
-FROM golang:1.21.1-alpine3.18 AS builder
+FROM golang:1.22.3-alpine3.18 AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN go install go.uber.org/mock/mockgen@v0.3.0
 RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.23.0
 
 # アプリケーションのビルド
-RUN CGO_ENABLED=0 GOOS=linux go build -o main ./app
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/main ./app/cmd/main.go
 
 # 実行ステージ
 FROM alpine:3.18

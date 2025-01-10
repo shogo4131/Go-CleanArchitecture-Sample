@@ -21,6 +21,7 @@ services:
       TZ: Asia/Tokyo
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
       LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: your_secure_password
     command: --collation-server=utf8mb4_general_ci
     platform: linux/x86_64
 
@@ -40,8 +41,8 @@ services:
       - "8080:8080"
     volumes:
       - type: bind
-        source: ./
-        target: /app
+        source: ./config
+        target: /app/config
     depends_on:
       - db
       - redis
